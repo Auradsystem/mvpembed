@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = '/api';
+// Determine the API URL based on the environment
+const API_URL = import.meta.env.DEV ? 'http://localhost:3000/api' : '/api';
 
 /**
  * Upload a PDF file to the server
@@ -21,7 +22,13 @@ export async function uploadFile(file: File): Promise<any> {
     return response.data;
   } catch (error: any) {
     console.error('Error uploading file:', error);
-    throw new Error(error.response?.data?.error || 'Failed to upload file');
+    if (error.response?.data?.error) {
+      throw new Error(error.response.data.error);
+    } else if (error.message) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('Failed to upload file');
+    }
   }
 }
 
@@ -41,7 +48,13 @@ export async function searchDocuments(query: string, limit: number = 5): Promise
     return response.data.results || [];
   } catch (error: any) {
     console.error('Error searching documents:', error);
-    throw new Error(error.response?.data?.error || 'Failed to search documents');
+    if (error.response?.data?.error) {
+      throw new Error(error.response.data.error);
+    } else if (error.message) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('Failed to search documents');
+    }
   }
 }
 
@@ -55,6 +68,12 @@ export async function getDocuments(): Promise<string[]> {
     return response.data.documents || [];
   } catch (error: any) {
     console.error('Error fetching documents:', error);
-    throw new Error(error.response?.data?.error || 'Failed to fetch documents');
+    if (error.response?.data?.error) {
+      throw new Error(error.response.data.error);
+    } else if (error.message) {
+      throw new Error(error.message);
+    } else {
+      throw new Error('Failed to fetch documents');
+    }
   }
 }

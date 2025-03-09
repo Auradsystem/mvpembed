@@ -7,9 +7,11 @@ export const highlighter = {
    * @returns {string} - Text with highlighted code blocks
    */
   highlightCode(text) {
-    // Simple regex to detect code blocks
-    // This is a basic implementation - in a real app, you might want more sophisticated detection
-    const codeBlockRegex = /```([a-zA-Z]*)\n([\s\S]*?)\n```/g;
+    if (!text) return '';
+    
+    // Simple detection of code blocks (text that looks like code)
+    // This is a basic implementation - could be improved with more sophisticated detection
+    const codeBlockRegex = /```([a-z]*)\n([\s\S]*?)\n```/g;
     
     // Replace code blocks with highlighted versions
     const highlightedText = text.replace(codeBlockRegex, (match, language, code) => {
@@ -18,8 +20,9 @@ export const highlighter = {
         if (language && hljs.getLanguage(language)) {
           const highlighted = hljs.highlight(code, { language });
           return `<pre><code class="hljs language-${language}">${highlighted.value}</code></pre>`;
-        } else {
-          // Auto-detect language
+        } 
+        // Auto-detect language
+        else {
           const highlighted = hljs.highlightAuto(code);
           return `<pre><code class="hljs">${highlighted.value}</code></pre>`;
         }
